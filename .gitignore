@@ -1,0 +1,165 @@
+# ================================
+# SUDNO-DPSU .gitignore
+# ================================
+
+# ================================
+# Environment Files & Secrets
+# ================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ================================
+# Dependencies
+# ================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ================================
+# Build Output
+# ================================
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Backend build
+backend/backend/dist/
+backend/backend/build/
+
+# ================================
+# Runtime & Logs
+# ================================
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+pids/
+*.pid
+*.seed
+
+# ================================
+# Development & Cache
+# ================================
+.cache/
+.temp/
+.tmp/
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Coverage & Testing
+coverage/
+.nyc_output/
+.jest/
+
+# ================================
+# Database & Uploads
+# ================================
+uploads/
+*.sqlite
+*.sqlite3
+*.db
+
+# Database dumps
+*.sql
+*.dump
+
+# ================================
+# OS Generated Files
+# ================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ================================
+# Development Environment
+# ================================
+# Exclude the entire development environment directory
+# since it's a copy of production code
+environments/
+
+# ================================
+# Temporary Files
+# ================================
+/tmp/
+temp/
+*.tmp
+*.temp
+
+# ================================
+# SSL Certificates & Keys
+# ================================
+*.crt
+*.csr
+*.key
+*.pem
+ssl/
+certs/
+
+# ================================
+# Backup Files
+# ================================
+*.backup
+*.bak
+*.old
+backup/
+backups/
+
+# ================================
+# Local Development
+# ================================
+.claude/
+local/
+dev/
+
+# ================================
+# Error Screenshots & Test Reports
+# ================================
+*.png
+*.jpg
+*.jpeg
+*.gif
+*_TEST_REPORT.md
+*-error.png
+
+# ================================
+# Process Management
+# ================================
+.pm2/
+ecosystem.config.js
+
+# ================================
+# Nginx & Server Config (if sensitive)
+# ================================
+# Note: We'll include the deployment configs but exclude sensitive server configs
+# /etc/
+nginx.conf
+
+# ================================
+# Application Specific
+# ================================
+# Test files that might contain sensitive data
+test-*.js
+*-test.js
