@@ -26,7 +26,7 @@
 ### Base URL
 ```
 Production: https://api.sudnokontrol.online/api
-Development: http://localhost:3001/api
+Development: http://api-dev.sudnokontrol.online/api
 ```
 
 ### Authentication Header
