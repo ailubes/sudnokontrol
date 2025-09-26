@@ -137,6 +137,74 @@ PORT=3001
 NODE_ENV=development
 ```
 
+## Environment Management
+
+### Environment Restart Commands
+
+**🚀 RECOMMENDED: Use Management Script**
+```bash
+# Restart production environment
+/var/www/sudnokontrol.online/scripts/manage-environments.sh restart production
+
+# Restart development environment
+/var/www/sudnokontrol.online/scripts/manage-environments.sh restart development
+
+# Start/stop individual environments
+/var/www/sudnokontrol.online/scripts/manage-environments.sh start production
+/var/www/sudnokontrol.online/scripts/manage-environments.sh stop development
+```
+
+**🔧 Manual Restart (if management script fails)**
+
+*Production Environment:*
+```bash
+# Stop existing processes
+pkill -f "node.*3001"
+pkill -f "node.*3000"
+
+# Start backend (port 3001)
+cd /var/www/sudnokontrol.online/backend/backend
+NODE_ENV=production PORT=3001 DB_PASSWORD=sudno123postgres npm start &
+
+# Start frontend (port 3000)
+cd /var/www/sudnokontrol.online/frontend
+NODE_ENV=production PORT=3000 npm start &
+```
+
+*Development Environment:*
+```bash
+# Stop existing processes
+pkill -f "node.*3030"
+pkill -f "node.*8080"
+
+# Start backend (port 3030)
+cd /var/www/sudnokontrol.online/environments/development/backend/backend
+NODE_ENV=development PORT=3030 DB_NAME=sudno_dpsu_dev DB_PASSWORD=sudno123postgres npm run dev &
+
+# Start frontend (port 8080)
+cd /var/www/sudnokontrol.online/environments/development/frontend
+PORT=8080 npm run dev &
+```
+
+### Environment URLs
+- **Production**:
+  - Frontend: https://sudnokontrol.online
+  - Backend: https://api.sudnokontrol.online
+- **Development**:
+  - Frontend: https://dev.sudnokontrol.online
+  - Backend: https://api-dev.sudnokontrol.online
+
+### Environment Configuration
+- **Production DB**: `sudno_dpsu`
+- **Development DB**: `sudno_dpsu_dev`
+- **DB Password**: `sudno123postgres`
+- **DB User**: `postgres`
+
+### Troubleshooting
+- Check logs: `tail -f /tmp/dev-backend.log` or `/tmp/dev-frontend.log`
+- Kill port conflicts: `fuser -k 3030/tcp` or `lsof -ti:3030 | xargs kill`
+- Verify database: `PGPASSWORD=sudno123postgres psql -h localhost -U postgres -l`
+
 ## Important Notes
 
 - Frontend uses `--legacy-peer-deps` flag for npm install due to dependency conflicts
