@@ -1,4 +1,4 @@
-# 📱 SUDNO-DPSU Mobile API Documentation
+# 📱 SudnoKontrol Mobile API Documentation
 
 > **Mobile Application API Reference**
 > Complete API guide for vessel owner and marina owner mobile applications

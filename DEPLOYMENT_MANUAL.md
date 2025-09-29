@@ -1,8 +1,8 @@
-# SUDNO-DPSU Multi-Environment Deployment Manual
+# SudnoKontrol Multi-Environment Deployment Manual
 
 ## 🏗️ Architecture Overview
 
-Your SUDNO-DPSU project now runs in two separate environments on the same server:
+Your SudnoKontrol project now runs in two separate environments on the same server:
 
 ### Production Environment
 - **Frontend**: https://sudnokontrol.online (port 3000)
@@ -162,14 +162,14 @@ sudo /var/www/sudnokontrol.online/scripts/manage-environments.sh backup developm
 **Production**: `/var/www/sudnokontrol.online/frontend/.env.local`
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3030/api
-NEXT_PUBLIC_APP_NAME=SUDNO-DPSU Admin Dashboard
+NEXT_PUBLIC_APP_NAME=SudnoKontrol Admin Dashboard
 PORT=8080
 ```
 
 **Development**: `/var/www/sudnokontrol.online/environments/development/frontend/.env.local`
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://api-dev.sudnokontrol.online/api
-NEXT_PUBLIC_APP_NAME=SUDNO-DPSU Admin Dashboard (Development)
+NEXT_PUBLIC_APP_NAME=SudnoKontrol Admin Dashboard (Development)
 PORT=8080
 NODE_ENV=development
 ```

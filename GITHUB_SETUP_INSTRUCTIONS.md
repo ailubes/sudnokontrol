@@ -24,7 +24,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2qI559EsPG3InFUsoTLdM4RYsA5haIMob247igYBOm
 2. Click your profile picture → **Settings**
 3. In the left sidebar, click **SSH and GPG keys**
 4. Click **New SSH key**
-5. Give it a title: "SUDNO-DPSU Server"
+5. Give it a title: "SudnoKontrol Server"
 6. Paste the SSH key above into the "Key" field
 7. Click **Add SSH key**
 
@@ -33,7 +33,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2qI559EsPG3InFUsoTLdM4RYsA5haIMob247igYBOm
 **Option A: Create via GitHub Web Interface**
 1. Go to https://github.com/new
 2. Repository name: `sudno-dpsu` (or your preferred name)
-3. Description: "SUDNO-DPSU Maritime Vessel Tracking System"
+3. Description: "SudnoKontrol Maritime Vessel Tracking System"
 4. Set to **Private** (recommended for production systems)
 5. **DO NOT** initialize with README (we already have one)
 6. Click **Create repository**
@@ -41,7 +41,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII2qI559EsPG3InFUsoTLdM4RYsA5haIMob247igYBOm
 **Option B: Create via Command Line (after SSH key is added)**
 ```bash
 # Replace YOUR_USERNAME with your GitHub username
-gh repo create YOUR_USERNAME/sudno-dpsu --private --description "SUDNO-DPSU Maritime Vessel Tracking System"
+gh repo create YOUR_USERNAME/sudno-dpsu --private --description "SudnoKontrol Maritime Vessel Tracking System"
 ```
 
 ### 3. Connect and Push to GitHub

@@ -1,4 +1,4 @@
-# SUDNO-DPSU (СудноКонтроль)
+# SudnoKontrol (СудноКонтроль)
 
 Maritime vessel tracking and notification system for Ukraine's Border Guard Service.
 
@@ -127,7 +127,7 @@ PostgreSQL with PostGIS for geospatial data:
 ### Frontend
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://api.sudnokontrol.online/api
-NEXT_PUBLIC_APP_NAME=SUDNO-DPSU Admin Dashboard
+NEXT_PUBLIC_APP_NAME=SudnoKontrol Admin Dashboard
 PORT=3000
 ```
 

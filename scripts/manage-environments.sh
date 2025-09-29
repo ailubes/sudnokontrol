@@ -37,20 +37,20 @@ print_error() {
 # Function to show environment status
 show_status() {
     echo "================================"
-    echo "📊 SUDNO-DPSU Environment Status"
+    echo "📊 SudnoKontrol Environment Status"
     echo "================================"
     echo ""
 
     # Production status
-    echo "🏭 PRODUCTION (Port 3000 Frontend, Port 6000 Backend):"
+    echo "🏭 PRODUCTION (Port 8000 Frontend, Port 3000 Backend):"
     echo "   Frontend: https://sudnokontrol.online"
     echo "   API: https://api.sudnokontrol.online"
-    if curl -sSf http://localhost:3000/ > /dev/null 2>&1; then
+    if curl -sSf http://localhost:8000/ > /dev/null 2>&1; then
         echo -e "   Status: ${GREEN}✅ Frontend Running${NC}"
     else
         echo -e "   Status: ${RED}❌ Frontend Down${NC}"
     fi
-    if curl -sSf http://localhost:6000/health > /dev/null 2>&1; then
+    if curl -sSf http://localhost:3000/health > /dev/null 2>&1; then
         echo -e "   API Status: ${GREEN}✅ Backend Running${NC}"
     else
         echo -e "   API Status: ${RED}❌ Backend Down${NC}"
@@ -108,17 +108,17 @@ start_production() {
 
     # Stop any existing production processes
     pkill -f "PORT=3000" || true
-    pkill -f "PORT=6000" || true
+    pkill -f "PORT=8000" || true
 
-    # Start production frontend
-    cd $PROJECT_ROOT/frontend
-    print_status "Starting production frontend on port 3000..."
-    nohup npm start > /tmp/prod-frontend.log 2>&1 &
-
-    # Start production backend
+    # Start production backend (port 3000)
     cd $PROJECT_ROOT/backend/backend
-    print_status "Starting production backend on port 6000..."
-    nohup NODE_ENV=production PORT=6000 DB_PASSWORD=sudno123postgres npm start > /tmp/prod-backend.log 2>&1 &
+    print_status "Starting production backend on port 3000..."
+    nohup env NODE_ENV=production PORT=3000 DB_NAME=sudno_dpsu DB_PASSWORD=sudno123postgres npm start > /tmp/prod-backend.log 2>&1 &
+
+    # Start production frontend (port 8000)
+    cd $PROJECT_ROOT/frontend
+    print_status "Starting production frontend on port 8000..."
+    nohup env NODE_ENV=production npm start > /tmp/prod-frontend.log 2>&1 &
 
     sleep 5
     print_success "Production environment started"

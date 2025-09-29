@@ -61,13 +61,9 @@ stop_development_processes() {
 
 # Function to update codebase
 update_codebase() {
-    print_status "Updating development codebase..."
-
-    # Copy latest code from main directories
-    rsync -av --exclude=node_modules --exclude=.next --exclude=dist /var/www/sudnokontrol.online/frontend/ $FRONTEND_DIR/
-    rsync -av --exclude=node_modules --exclude=dist /var/www/sudnokontrol.online/backend/ $DEV_DIR/backend/
-
-    print_success "Codebase updated"
+    print_status "Skipping codebase overwrite - preserving development work..."
+    print_warning "Development files preserved. Use 'reset-dev' command to sync from production if needed."
+    print_success "Development codebase preserved"
 }
 
 # Function to install dependencies
@@ -151,6 +147,29 @@ main() {
     print_success "✅ Development deployment completed successfully!"
 }
 
+# Function to reset development from production
+reset_development() {
+    print_status "Resetting development environment from production..."
+
+    # Copy latest code from main directories
+    rsync -av --exclude=node_modules --exclude=.next --exclude=dist /var/www/sudnokontrol.online/frontend/ $FRONTEND_DIR/
+    rsync -av --exclude=node_modules --exclude=dist /var/www/sudnokontrol.online/backend/ $DEV_DIR/backend/
+
+    print_success "Development environment reset from production"
+}
+
+# Function to deploy development to production
+deploy_to_production() {
+    print_status "Deploying development changes to production..."
+
+    # Copy development code to production directories
+    rsync -av --exclude=node_modules --exclude=.next --exclude=dist $FRONTEND_DIR/ /var/www/sudnokontrol.online/frontend/
+    rsync -av --exclude=node_modules --exclude=dist $DEV_DIR/backend/ /var/www/sudnokontrol.online/backend/
+
+    print_success "Development changes deployed to production source"
+    print_status "You can now restart production environment if needed"
+}
+
 # Handle script arguments
 case "${1:-deploy}" in
     "deploy")
@@ -165,6 +184,17 @@ case "${1:-deploy}" in
         start_applications
         verify_deployment
         ;;
+    "reset-dev")
+        stop_development_processes
+        reset_development
+        install_dependencies
+        build_applications
+        start_applications
+        verify_deployment
+        ;;
+    "deploy-to-prod")
+        deploy_to_production
+        ;;
     "logs")
         echo "Backend logs:"
         tail -f /tmp/dev-backend.log &
@@ -176,12 +206,14 @@ case "${1:-deploy}" in
         ps aux | grep -E "(PORT=3030|PORT=8080)" | grep -v grep || echo "No development processes running"
         ;;
     *)
-        echo "Usage: $0 {deploy|stop|restart|logs|status}"
-        echo "  deploy  - Full deployment (default)"
-        echo "  stop    - Stop development processes"
-        echo "  restart - Restart development processes"
-        echo "  logs    - Show development logs"
-        echo "  status  - Show process status"
+        echo "Usage: $0 {deploy|stop|restart|reset-dev|deploy-to-prod|logs|status}"
+        echo "  deploy        - Start development (preserve existing code)"
+        echo "  stop          - Stop development processes"
+        echo "  restart       - Restart development processes"
+        echo "  reset-dev     - Reset development from production source"
+        echo "  deploy-to-prod - Deploy development changes to production source"
+        echo "  logs          - Show development logs"
+        echo "  status        - Show process status"
         exit 1
         ;;
 esac

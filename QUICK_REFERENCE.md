@@ -1,4 +1,4 @@
-# 🚀 SUDNO-DPSU Quick Reference
+# 🚀 SudnoKontrol Quick Reference
 
 ## 🌐 Environment URLs
 - **Production**: https://sudnokontrol.online | https://api.sudnokontrol.online

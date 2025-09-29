@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SUDNO-DPSU (СудноКонтроль) is a maritime vessel tracking and notification system for Ukraine's Border Guard Service. The system consists of a Next.js frontend admin dashboard and a Node.js/Express backend API with PostgreSQL/PostGIS database.
+SudnoKontrol (СудноКонтроль) is a maritime vessel tracking and notification system for Ukraine's Border Guard Service. The system consists of a Next.js frontend admin dashboard and a Node.js/Express backend API with PostgreSQL/PostGIS database.
 
 ## Common Commands
 
@@ -115,7 +115,7 @@ PostgreSQL with PostGIS for geospatial data:
 ### Frontend (.env.local)
 ```
 NEXT_PUBLIC_API_BASE_URL=https://sudno-backend.enex.live/api
-NEXT_PUBLIC_APP_NAME=SUDNO-DPSU Admin Dashboard
+NEXT_PUBLIC_APP_NAME=SudnoKontrol Admin Dashboard
 NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=<optional>
 ```
 
@@ -133,8 +133,8 @@ SMTP_PORT=587
 SMTP_USER=<email>
 SMTP_PASS=<password>
 DPSU_EMAIL=<dpsu-email>
-PORT=3001
-NODE_ENV=development
+PORT=3000
+NODE_ENV=production
 ```
 
 ## Environment Management
@@ -159,16 +159,16 @@ NODE_ENV=development
 *Production Environment:*
 ```bash
 # Stop existing processes
-pkill -f "node.*3001"
 pkill -f "node.*3000"
+pkill -f "node.*8000"
 
-# Start backend (port 3001)
+# Start backend (port 3000)
 cd /var/www/sudnokontrol.online/backend/backend
-NODE_ENV=production PORT=3001 DB_PASSWORD=sudno123postgres npm start &
+NODE_ENV=production PORT=3000 DB_NAME=sudno_dpsu DB_PASSWORD=sudno123postgres npm start &
 
-# Start frontend (port 3000)
+# Start frontend (port 8000)
 cd /var/www/sudnokontrol.online/frontend
-NODE_ENV=production PORT=3000 npm start &
+NODE_ENV=production PORT=8000 npm start &
 ```
 
 *Development Environment:*
