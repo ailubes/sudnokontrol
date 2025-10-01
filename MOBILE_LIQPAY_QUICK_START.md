@@ -59,13 +59,51 @@ Body: {
 <WebView source={{ html: payment_form }} />
 ```
 
-### 4. Check Payment Status
+**Save the `order_id` from step 2 - you'll need it for activation!**
 
+### 4. Handle Payment Completion
+
+**⚠️ Important:** LiqPay sandbox may not call webhooks automatically.
+
+**Option A: Wait for Webhook (Production & Some Sandbox)**
 ```typescript
+// Wait 3-5 seconds after payment
+await new Promise(r => setTimeout(r, 3000));
+
+// Check payment status
 GET https://api-dev.sudnokontrol.online/api/subscriptions/payment/status/:order_id
 ```
 
-**Wait 3-5 seconds after payment, then poll this endpoint until status is "completed"**
+**Option B: Manual Activation (Sandbox Only - Recommended)**
+```typescript
+// After payment completes in WebView, manually activate:
+POST https://api-dev.sudnokontrol.online/api/subscriptions/webhook/test/:order_id
+
+// No authentication required
+// Response: { "success": true, "message": "Subscription activated manually" }
+```
+
+**Implementation Example:**
+```typescript
+// After WebView payment completes
+const activateSubscription = async (orderId: string) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/api/subscriptions/webhook/test/${orderId}`,
+      { method: 'POST' }
+    );
+    const result = await response.json();
+
+    if (result.success) {
+      // Subscription activated, refresh user profile
+      await checkAuth();
+      navigation.navigate('Home');
+    }
+  } catch (error) {
+    console.error('Manual activation failed:', error);
+  }
+};
+```
 
 ### 5. Refresh User Profile
 
@@ -166,13 +204,16 @@ Full API reference with all endpoints, examples, and troubleshooting:
 ## 🐛 Common Issues
 
 **Payment not activating?**
-→ Wait longer (5-10 seconds) and check status again
+→ LiqPay sandbox may not call webhooks. Use manual activation endpoint (see Step 4, Option B)
 
 **WebView blank?**
 → Enable JavaScript in WebView props
 
 **Still shows "pending"?**
-→ Refresh user profile instead of checking payment status
+→ Use manual activation: `POST /api/subscriptions/webhook/test/:order_id`
+
+**Manual activation returns 404?**
+→ Check that you're using the correct `order_id` from the subscription response
 
 ---
 
