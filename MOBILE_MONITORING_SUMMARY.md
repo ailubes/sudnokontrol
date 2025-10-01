@@ -181,10 +181,66 @@ Add better error message to distinguish between "user not found" and "wrong pass
 4. Monitor error patterns over next few days
 5. Iterate on error messages based on what you see
 
+## Related Documentation
+
+This monitoring system works alongside existing mobile API documentation:
+
+1. **MOBILE-API.md** (25KB)
+   - Complete API reference for mobile app developers
+   - All endpoints: Authentication, Vessels, Trips, GPS, Marinas, Subscriptions
+   - Code examples in React Native, Swift, Kotlin
+   - Error codes and handling
+   - Best practices and rate limits
+
+2. **MOBILE_API_DOCUMENTATION.md** (5.5KB)
+   - Free trial system implementation
+   - Subscription status fields in user object
+   - Backend implementation details
+   - Test user credentials
+   - Database schema for subscriptions
+
+3. **MOBILE_API_MONITORING.md** (10KB)
+   - This document - monitoring system guide
+   - Integration instructions for mobile devs
+   - Debugging workflow
+   - Dashboard usage
+
+4. **MOBILE_MONITORING_SUMMARY.md** (6KB)
+   - Quick reference for admins
+   - System overview
+   - Feedback format examples
+
+## Key Information from Other Docs
+
+### User Authentication Fields (from MOBILE_API_DOCUMENTATION.md)
+After login, user object includes:
+```json
+{
+  "subscription_status": "trial",
+  "trial_expires_at": "2025-10-26T10:02:15.498Z",
+  "trial_days_remaining": 31
+}
+```
+
+### Rate Limits (from MOBILE-API.md)
+- **Authentication**: 5 requests/minute per IP
+- **GPS Logging**: 120 requests/minute per user
+- **Standard API**: 60 requests/minute per user
+- **Bulk Operations**: 10 requests/minute per user
+
+### Key Endpoints (from MOBILE-API.md)
+- Authentication: `POST /auth/login`, `POST /auth/register`
+- Vessels: `GET /vessels/my`, `POST /vessels`
+- Trips: `POST /notifications` (actual_departure/actual_arrival)
+- GPS: `POST /gps/log`, `POST /gps/bulk-log`
+- Marinas: `GET /marinas/nearby`
+- Subscriptions: `GET /subscriptions/plans`, `POST /subscriptions/subscribe`
+
 ## Notes
 
 - System is already running in development environment
 - All requests are being logged automatically
 - Dashboard requires admin login
-- Logs are retained for analysis
+- Logs are retained for 90 days
 - No performance impact on API
+- Works with existing free trial and subscription system

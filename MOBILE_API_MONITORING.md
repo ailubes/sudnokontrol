@@ -4,6 +4,14 @@
 
 A comprehensive API monitoring system has been implemented to track and analyze all mobile app requests in real-time. This system helps developers debug issues, monitor performance, and understand user behavior.
 
+## Base URLs
+```
+Production: https://api.sudnokontrol.online/api
+Development: https://api-dev.sudnokontrol.online/api
+```
+
+**Current Environment**: Development (https://api-dev.sudnokontrol.online)
+
 ## System Components
 
 ### 1. Database Logging (`api_logs` table)
@@ -46,6 +54,19 @@ headers: {
   'X-Device-Info': 'Samsung Galaxy S23, Android 14'  // Device model and OS version
 }
 ```
+
+### Important Notes
+
+1. **Subscription Status Fields**: The user object includes trial/subscription information:
+   - `subscription_status`: 'none' | 'trial' | 'active' | 'expired' | 'cancelled'
+   - `trial_expires_at`: ISO date string
+   - `trial_days_remaining`: Number of days left
+
+2. **Authentication**: JWT tokens are returned in login/register responses
+3. **Rate Limits**:
+   - Authentication: 5 requests/minute per IP
+   - GPS Logging: 120 requests/minute per user
+   - Standard API: 60 requests/minute per user
 
 ### Example Implementation
 
@@ -345,9 +366,31 @@ If response times exceed these values, check:
 - IP addresses are logged for security analysis
 - Logs are retained for 90 days
 
+## API Endpoints Reference
+
+For complete API documentation, see:
+- **MOBILE-API.md** - Full API reference with all endpoints
+- **MOBILE_API_DOCUMENTATION.md** - Free trial system and subscription info
+
+Key Endpoints:
+- Authentication: `POST /api/auth/login`, `POST /api/auth/register`
+- Vessels: `GET /api/vessels/my`, `POST /api/vessels`
+- Trips: `POST /api/notifications` (departure/arrival)
+- GPS: `POST /api/gps/log`, `POST /api/gps/bulk-log`
+- Subscriptions: `GET /api/subscriptions/plans`, `GET /api/subscriptions/my`
+
 ## Support
 
-For questions or issues with the monitoring system:
+### Technical Support
+- **Mobile Support**: mobile-support@sudnokontrol.online
+- **Telegram**: @sudno_support
+- **Hours**: Пн-Пт 9:00-18:00 (UTC+2)
+
+### Emergency Contact
+- **24/7 Hotline**: +380 800 123 456
+- **DPSU Emergency**: 112
+
+For monitoring system issues:
 1. Check this documentation first
 2. Review recent logs in the dashboard
 3. Contact backend team with specific log IDs
@@ -365,3 +408,15 @@ For questions or issues with the monitoring system:
 **Admin API Base**: https://api-dev.sudnokontrol.online/api/api-monitor
 
 **Database Table**: `api_logs` in `sudno_dpsu_dev` database
+
+## Related Documentation
+
+- **MOBILE-API.md** - Complete API reference for all mobile endpoints (authentication, vessels, trips, GPS tracking, marinas, subscriptions)
+- **MOBILE_API_DOCUMENTATION.md** - Free trial system implementation, subscription fields, backend implementation details
+- **MOBILE_MONITORING_SUMMARY.md** - Quick reference summary for admins
+
+---
+
+*Last Updated: October 1, 2025*
+*API Version: 1.1.0*
+*Mobile Monitoring Dashboard: v1.0*
