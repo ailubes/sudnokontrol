@@ -152,10 +152,12 @@ reset_development() {
     print_status "Resetting development environment from production..."
 
     # Copy latest code from main directories
-    rsync -av --exclude=node_modules --exclude=.next --exclude=dist /var/www/sudnokontrol.online/frontend/ $FRONTEND_DIR/
-    rsync -av --exclude=node_modules --exclude=dist /var/www/sudnokontrol.online/backend/ $DEV_DIR/backend/
+    # IMPORTANT: Exclude .env files to preserve environment-specific configuration
+    rsync -av --exclude=node_modules --exclude=.next --exclude=dist --exclude=.env --exclude=.env.local --exclude=.env.production --exclude=.env.development /var/www/sudnokontrol.online/frontend/ $FRONTEND_DIR/
+    rsync -av --exclude=node_modules --exclude=dist --exclude=.env --exclude=.env.local --exclude=.env.production --exclude=.env.development /var/www/sudnokontrol.online/backend/ $DEV_DIR/backend/
 
     print_success "Development environment reset from production"
+    print_warning "Note: .env files preserved - development environment configuration unchanged"
 }
 
 # Function to deploy development to production
@@ -163,11 +165,35 @@ deploy_to_production() {
     print_status "Deploying development changes to production..."
 
     # Copy development code to production directories
-    rsync -av --exclude=node_modules --exclude=.next --exclude=dist $FRONTEND_DIR/ /var/www/sudnokontrol.online/frontend/
-    rsync -av --exclude=node_modules --exclude=dist $DEV_DIR/backend/ /var/www/sudnokontrol.online/backend/
+    # IMPORTANT: Exclude .env files to preserve environment-specific configuration
+    rsync -av --exclude=node_modules --exclude=.next --exclude=dist --exclude=.env --exclude=.env.local --exclude=.env.production --exclude=.env.development $FRONTEND_DIR/ /var/www/sudnokontrol.online/frontend/
+    rsync -av --exclude=node_modules --exclude=dist --exclude=.env --exclude=.env.local --exclude=.env.production --exclude=.env.development $DEV_DIR/backend/ /var/www/sudnokontrol.online/backend/
 
     print_success "Development changes deployed to production source"
-    print_status "You can now restart production environment if needed"
+    print_warning "Note: .env files preserved - production environment configuration unchanged"
+
+    # Install production dependencies
+    print_status "Installing production backend dependencies..."
+    cd /var/www/sudnokontrol.online/backend/backend
+    npm install
+
+    print_status "Installing production frontend dependencies..."
+    cd /var/www/sudnokontrol.online/frontend
+    npm install --legacy-peer-deps
+
+    print_success "Dependencies installed"
+
+    # Build production applications
+    print_status "Building production backend..."
+    cd /var/www/sudnokontrol.online/backend/backend
+    npm run build
+
+    print_status "Building production frontend..."
+    cd /var/www/sudnokontrol.online/frontend
+    npm run build
+
+    print_success "Production build completed"
+    print_status "You can now restart production environment"
 }
 
 # Handle script arguments

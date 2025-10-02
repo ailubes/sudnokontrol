@@ -249,7 +249,266 @@ Authorization: Bearer <token>
 
 ## 🗺️ Trip Management
 
-### 1. Start New Trip (Departure Notification)
+### 1. Get My Trips
+```http
+GET /trips/my?limit=20&offset=0&status=active
+Authorization: Bearer <token>
+```
+
+**Description**: Get all trips for the authenticated user.
+
+**Query Parameters** (all optional):
+- `limit` - Number of trips to return (default: 20)
+- `offset` - Pagination offset (default: 0)
+- `status` - Filter by status: `active`, `completed`, `cancelled`
+
+**Response:**
+```json
+{
+  "success": true,
+  "trips": [
+    {
+      "id": "165e6976-dfdd-4411-bc7f-416af44e573b",
+      "vessel_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+      "vessel_name": "Дельфін",
+      "vessel_registration": "UA-0001-OD",
+      "owner_name": "Іван Коваленко",
+      "owner_phone": "+380501234567",
+      "departure_marina_id": "d35583ce-8412-4398-81ff-53adeeb3e346",
+      "departure_marina_name": "Одеський морський порт",
+      "arrival_marina_id": "f45583ce-8412-4398-81ff-53adeeb3e347",
+      "arrival_marina_name": "Іллічівський порт",
+      "departure_time": "2024-01-15T10:00:00.000Z",
+      "arrival_time": "2024-01-15T18:00:00.000Z",
+      "status": "in_progress",
+      "distance_km": 45.5,
+      "duration_hours": 4.2,
+      "captain_name": "Іван Коваленко",
+      "passengers_count": 3,
+      "purpose": "Recreational",
+      "notes": "Coastal route along Black Sea",
+      "created_at": "2024-01-15T09:30:00.000Z",
+      "updated_at": "2024-01-15T10:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 3,
+    "limit": 20,
+    "offset": 0,
+    "pages": 1
+  }
+}
+```
+
+### 2. Get Trip Details
+```http
+GET /trips/:id
+Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "trip": {
+    "id": "165e6976-dfdd-4411-bc7f-416af44e573b",
+    "vessel_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+    "vessel_name": "Дельфін",
+    "vessel_registration": "UA-0001-OD",
+    "owner_name": "Іван Коваленко",
+    "owner_phone": "+380501234567",
+    "departure_marina_id": "d35583ce-8412-4398-81ff-53adeeb3e346",
+    "departure_marina_name": "Одеський морський порт",
+    "arrival_marina_id": "f45583ce-8412-4398-81ff-53adeeb3e347",
+    "arrival_marina_name": "Іллічівський порт",
+    "departure_time": "2024-01-15T10:00:00.000Z",
+    "arrival_time": "2024-01-15T18:00:00.000Z",
+    "status": "in_progress",
+    "distance_km": 45.5,
+    "duration_hours": 4.2,
+    "captain_name": "Іван Коваленко",
+    "passengers_count": 3,
+    "purpose": "Recreational",
+    "notes": "Coastal route along Black Sea",
+    "created_at": "2024-01-15T09:30:00.000Z",
+    "updated_at": "2024-01-15T10:00:00.000Z"
+  }
+}
+```
+
+### 3. Create New Trip
+```http
+POST /trips
+Authorization: Bearer <token>
+```
+
+**Request:**
+```json
+{
+  "vessel_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+  "departure_marina_id": "d35583ce-8412-4398-81ff-53adeeb3e346",
+  "arrival_marina_id": "f45583ce-8412-4398-81ff-53adeeb3e347",
+  "departure_time": "2024-01-15T10:00:00.000Z",
+  "planned_arrival_time": "2024-01-15T18:00:00.000Z",
+  "purpose": "Recreational",
+  "crew_count": 2,
+  "passenger_count": 4,
+  "route_description": "Coastal fishing trip"
+}
+```
+
+**Required Fields:**
+- `vessel_id` (UUID)
+- `departure_marina_id` (UUID)
+- `departure_time` (ISO 8601 date string)
+- `purpose` (string)
+
+**Optional Fields:**
+- `arrival_marina_id` (UUID)
+- `planned_arrival_time` (ISO 8601 date string)
+- `crew_count` (integer, default: 1)
+- `passenger_count` (integer, default: 0)
+- `route_description` (string)
+
+**Response:**
+```json
+{
+  "success": true,
+  "trip": {
+    "id": "new-trip-uuid",
+    "vessel_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+    "owner_id": "owner-uuid",
+    "departure_marina_id": "d35583ce-8412-4398-81ff-53adeeb3e346",
+    "arrival_marina_id": "f45583ce-8412-4398-81ff-53adeeb3e347",
+    "departure_time": "2024-01-15T10:00:00.000Z",
+    "planned_arrival_time": "2024-01-15T18:00:00.000Z",
+    "status": "active",
+    "purpose": "Recreational",
+    "crew_count": 2,
+    "passenger_count": 4,
+    "route_description": "Coastal fishing trip",
+    "created_at": "2024-01-15T09:30:00.000Z",
+    "updated_at": "2024-01-15T09:30:00.000Z"
+  }
+}
+```
+
+### 4. Update Trip
+```http
+PUT /trips/:id
+Authorization: Bearer <token>
+```
+
+**Request (all fields optional):**
+```json
+{
+  "arrival_marina_id": "new-marina-uuid",
+  "planned_arrival_time": "2024-01-15T20:00:00.000Z",
+  "crew_count": 3,
+  "passenger_count": 5,
+  "route_description": "Updated route description"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "trip": {
+    "id": "165e6976-dfdd-4411-bc7f-416af44e573b",
+    "vessel_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+    "owner_id": "owner-uuid",
+    "departure_marina_id": "d35583ce-8412-4398-81ff-53adeeb3e346",
+    "arrival_marina_id": "new-marina-uuid",
+    "departure_time": "2024-01-15T10:00:00.000Z",
+    "planned_arrival_time": "2024-01-15T20:00:00.000Z",
+    "status": "active",
+    "crew_count": 3,
+    "passenger_count": 5,
+    "route_description": "Updated route description",
+    "updated_at": "2024-01-15T12:00:00.000Z"
+  }
+}
+```
+
+### 5. Complete Trip
+```http
+POST /trips/:id/complete
+Authorization: Bearer <token>
+```
+
+**Request (all fields optional):**
+```json
+{
+  "arrival_marina_id": "f45583ce-8412-4398-81ff-53adeeb3e347",
+  "actual_arrival_time": "2024-01-15T18:30:00.000Z"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Trip completed successfully",
+  "trip": {
+    "id": "165e6976-dfdd-4411-bc7f-416af44e573b",
+    "status": "completed",
+    "actual_arrival_time": "2024-01-15T18:30:00.000Z",
+    "duration_hours": "8.50",
+    "updated_at": "2024-01-15T18:30:00.000Z"
+  }
+}
+```
+
+**Note**: Duration is automatically calculated from `departure_time` to `actual_arrival_time`.
+
+### 6. Delete Trip
+```http
+DELETE /trips/:id
+Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Trip deleted successfully"
+}
+```
+
+### 7. Get Trip Statistics
+```http
+GET /trips/statistics
+Authorization: Bearer <token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "statistics": {
+    "total_trips": 15,
+    "active_trips": 2,
+    "completed_trips": 12,
+    "cancelled_trips": 1,
+    "total_distance": 456.7,
+    "avg_distance": 30.45,
+    "total_duration": 127.5,
+    "recent_activity": [
+      {
+        "date": "2024-01-15",
+        "count": 3
+      },
+      {
+        "date": "2024-01-14",
+        "count": 1
+      }
+    ]
+  }
+}
+```
+
+### 8. Start New Trip (Legacy - Departure Notification)
 ```http
 POST /notifications
 Authorization: Bearer <token>
@@ -291,7 +550,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### 2. End Trip (Arrival Notification)
+### 9. End Trip (Legacy - Arrival Notification)
 ```http
 POST /notifications
 Authorization: Bearer <token>
@@ -311,81 +570,6 @@ Authorization: Bearer <token>
     "longitude": 30.7233
   }
 }
-```
-
-### 3. Get Active Trips
-```http
-GET /notifications/my?type=actual_departure&status=submitted&active=true
-Authorization: Bearer <token>
-```
-
-**Response:**
-```json
-{
-  "notifications": [
-    {
-      "id": "uuid",
-      "vessel": {
-        "id": "uuid",
-        "name": "Дельфін",
-        "registration_number": "UA-0001-OD"
-      },
-      "type": "actual_departure",
-      "status": "submitted",
-      "departure_time": "2024-01-15T10:00:00Z",
-      "planned_return_time": "2024-01-15T18:00:00Z",
-      "route_description": "Вихід в море для риболовлі",
-      "trip_duration": "7:30:00",
-      "current_status": "в морі"
-    }
-  ]
-}
-```
-
-### 4. Get Trip History
-```http
-GET /notifications/vessel/:vesselId/history?from=2024-01-01&to=2024-01-31&page=1&limit=20
-Authorization: Bearer <token>
-```
-
-**Response:**
-```json
-{
-  "trips": [
-    {
-      "id": "uuid",
-      "trip_id": "TRIP-2024-001",
-      "departure": {
-        "time": "2024-01-15T10:00:00Z",
-        "marina": "Центральна Марина Одеси",
-        "coordinates": { "latitude": 46.4775, "longitude": 30.7326 }
-      },
-      "arrival": {
-        "time": "2024-01-15T17:30:00Z",
-        "marina": "Центральна Марина Одеси",
-        "coordinates": { "latitude": 46.4825, "longitude": 30.7233 }
-      },
-      "duration": "7:30:00",
-      "distance_traveled": 24.5,
-      "max_speed": 12.3,
-      "average_speed": 8.7,
-      "route_description": "Риболовля біля острова Зміїний",
-      "status": "completed"
-    }
-  ],
-  "statistics": {
-    "total_trips": 15,
-    "total_distance": 456.7,
-    "total_time": "127:45:00",
-    "average_trip_duration": "8:31:00"
-  }
-}
-```
-
-### 5. Update Trip Information
-```http
-PUT /notifications/:id
-Authorization: Bearer <token>
 ```
 
 ---

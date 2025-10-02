@@ -108,7 +108,8 @@ start_production() {
 
     # Stop any existing production processes
     pkill -f "PORT=3000" || true
-    pkill -f "PORT=8000" || true
+    # Kill frontend on port 8000 (matches "next start -p 8000" or "PORT=8000")
+    lsof -ti:8000 | xargs -r kill -9 || true
 
     # Start production backend (port 3000)
     cd $PROJECT_ROOT/backend/backend
@@ -118,7 +119,7 @@ start_production() {
     # Start production frontend (port 8000)
     cd $PROJECT_ROOT/frontend
     print_status "Starting production frontend on port 8000..."
-    nohup env NODE_ENV=production npm start > /tmp/prod-frontend.log 2>&1 &
+    nohup env NODE_ENV=production npx next start -p 8000 > /tmp/prod-frontend.log 2>&1 &
 
     sleep 5
     print_success "Production environment started"
@@ -144,7 +145,7 @@ stop_all() {
 
     # Stop all SUDNO processes
     pkill -f "PORT=3000" || true
-    pkill -f "PORT=6000" || true
+    lsof -ti:8000 | xargs -r kill -9 || true  # Production frontend
     pkill -f "PORT=8080" || true
     pkill -f "PORT=3030" || true
 
@@ -161,7 +162,8 @@ restart_environment() {
         "production"|"prod")
             print_status "Restarting production environment..."
             pkill -f "PORT=3000" || true
-            pkill -f "PORT=6000" || true
+            # Kill frontend on port 8000 (matches "next start -p 8000" or "PORT=8000")
+            lsof -ti:8000 | xargs -r kill -9 || true
             sleep 3
             start_production
             ;;
