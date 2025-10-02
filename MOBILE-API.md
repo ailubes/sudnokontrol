@@ -283,6 +283,8 @@ Authorization: Bearer <token>
       "status": "in_progress",
       "distance_km": 45.5,
       "duration_hours": 4.2,
+      "avg_speed_kmh": 9.2,
+      "max_speed_kmh": 15.7,
       "captain_name": "Іван Коваленко",
       "passengers_count": 3,
       "purpose": "Recreational",
@@ -476,7 +478,61 @@ Authorization: Bearer <token>
 }
 ```
 
-### 7. Get Trip Statistics
+### 7. Get Trip GPS Track
+```http
+GET /trips/:id/track?format=json&simplified=false
+Authorization: Bearer <token>
+```
+
+**Query Parameters** (all optional):
+- `format` - Response format: `json` (default)
+- `simplified` - Reduce track points for better performance: `true` | `false` (default)
+
+**Response:**
+```json
+{
+  "success": true,
+  "trip_id": "a25ac569-5ea7-4326-8cd1-a70a0504a50b",
+  "track": [
+    {
+      "latitude": 46.4775,
+      "longitude": 30.7326,
+      "speed": 8.5,
+      "heading": 180,
+      "accuracy": 5.0,
+      "altitude": 2.0,
+      "recorded_at": "2024-01-15T10:00:00.000Z",
+      "timestamp": 1705316400000
+    },
+    {
+      "latitude": 46.4780,
+      "longitude": 30.7330,
+      "speed": 9.2,
+      "heading": 185,
+      "accuracy": 4.5,
+      "altitude": 2.5,
+      "recorded_at": "2024-01-15T10:01:00.000Z",
+      "timestamp": 1705316460000
+    }
+  ],
+  "statistics": {
+    "total_points": 204,
+    "simplified_points": 100,
+    "distance_km": 45.5,
+    "max_speed": 15.7,
+    "avg_speed": 9.2,
+    "duration_hours": 8.5,
+    "start_time": "2024-01-15T10:00:00.000Z",
+    "end_time": "2024-01-15T18:30:00.000Z"
+  }
+}
+```
+
+**Note**:
+- Trip statistics (distance, avg_speed, max_speed) are automatically calculated from GPS data and saved to the trip record
+- Use `simplified=true` for trips with >100 GPS points to reduce data transfer
+
+### 8. Get Trip Statistics
 ```http
 GET /trips/statistics
 Authorization: Bearer <token>
